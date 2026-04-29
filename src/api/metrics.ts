@@ -1,7 +1,7 @@
 import { type Response, type Request } from "express";
 import { config } from "../config.js";
 
-export function handlerMetrics(request: Request, response: Response)
+export async function handlerMetrics(request: Request, response: Response)
 {
     response.set("Content-Type", "text/html; charset=utf-8");
     response.send(`<html>
@@ -12,7 +12,7 @@ export function handlerMetrics(request: Request, response: Response)
 </html>`);
 }
 
-export function handlerReset(request: Request, response: Response)
+export async function handlerReset(request: Request, response: Response)
 {
     config.fileserverHits = 0;
     response.write("Hits reset to 0");
