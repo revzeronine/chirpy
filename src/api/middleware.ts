@@ -1,5 +1,6 @@
 import { type Response, type Request, type NextFunction } from "express";
 import { config } from "../config.js";
+import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from "../error.js";
 
 export function middlewareLogResponses(request: Request, response: Response, next: NextFunction): void
 {
@@ -19,9 +20,28 @@ export function middlewareMetricsInc(request: Request, response: Response, next:
 
 export function middlewareError(error: Error, request: Request, response: Response, next: NextFunction): void
 {
-    console.log("Error: " + error.message);
+    let status = 500;
+    let message = error.message;
 
-    response.status(500).json({
-        error: "Something went wrong on our end",
+    if (error instanceof BadRequestError) {
+        status = 400;
+    }
+    else if (error instanceof UnauthorizedError) {
+        status = 401;
+    }
+    else if (error instanceof ForbiddenError) {
+        status = 403;
+    }
+    else if (error instanceof NotFoundError) {
+        status = 404;
+    }
+
+    if (status >= 500) {
+        message = "Internal Server Error";
+        console.log(error.message);
+    }
+
+    response.status(status).json({
+        error: message,
     });
 }

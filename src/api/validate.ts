@@ -1,4 +1,5 @@
 import { type Response, type Request } from "express";
+import { BadRequestError } from "../error.js";
 
 export async function handlerValidateChirp(request: Request, response: Response)
 {
@@ -8,8 +9,11 @@ export async function handlerValidateChirp(request: Request, response: Response)
 
     const params: parameters = request.body;
 
-    if (params.body.length > 140) {
-        throw new Error("Chirp is too long")
+    const maxChirpLength = 140;
+    if (params.body.length > maxChirpLength) {
+        throw new BadRequestError(
+            `Chirp is too long. Max length is ${maxChirpLength}`
+        );
     }
 
     const filter = /(kerfuffle|sharbert|fornax)/gi;
