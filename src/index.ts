@@ -8,9 +8,9 @@ import { handlerHits, handlerResetHits } from "./handlers/hits.js";
 const app = express();
 const PORT = 8080;
 
-app.get("/healthz", handlerReadiness);
-app.get("/metrics", handlerHits);
-app.get("/reset", handlerResetHits);
+app.get("/api/healthz", handlerReadiness);
+app.get("/admin/reset", handlerResetHits);
+app.get("/admin/metrics", handlerHits);
 
 app.use(middlewareLogResponses);
 app.use("/app", middlewareMetricsInc);
