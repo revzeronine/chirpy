@@ -14,6 +14,7 @@ export function envOrThrow(key: string): string
 
 type APIConfig = {
     fileserverHits: number;
+    platform: string;
 };
 
 type DBConfig = {
@@ -27,6 +28,7 @@ const migrationConfig: MigrationConfig = {
 
 const apiConfig: APIConfig = {
     fileserverHits: 0,
+    platform: envOrThrow("PLATFORM"),
 }
 
 const dbConfig: DBConfig = {
