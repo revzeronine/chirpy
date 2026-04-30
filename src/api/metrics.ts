@@ -7,14 +7,14 @@ export async function handlerMetrics(request: Request, response: Response)
     response.send(`<html>
   <body>
     <h1>Welcome, Chirpy Admin</h1>
-    <p>Chirpy has been visited ${config.fileserverHits} times!</p>
+    <p>Chirpy has been visited ${config.api.fileserverHits} times!</p>
   </body>
 </html>`);
 }
 
 export async function handlerReset(request: Request, response: Response)
 {
-    config.fileserverHits = 0;
+    config.api.fileserverHits = 0;
     response.write("Hits reset to 0");
     response.end();
 }
