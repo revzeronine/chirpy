@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 
 import { BadRequestError } from "../error.js";
-import { createChirp } from "../db/queries/chirps.js";
+import { createChirp, getChirps } from "../db/queries/chirps.js";
 
 export async function handlerCreateChirp(request: Request, response: Response)
 {
@@ -20,6 +20,13 @@ export async function handlerCreateChirp(request: Request, response: Response)
         throw new Error("Could not add chirp to the database.");
 
     response.status(201).json(chirp);
+}
+
+export async function handlerGetChirps(request: Request, response: Response)
+{
+    const chirps = await getChirps();
+    
+    response.status(200).json(chirps);
 }
 
 function validateChirp(chirpMessage: string)
