@@ -8,6 +8,13 @@
       "when": 1777565650295,
       "tag": "0000_messy_paibok",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777653557052,
+      "tag": "0001_flashy_white_tiger",
+      "breakpoints": true
     }
   ]
 }
