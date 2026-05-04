@@ -15,6 +15,20 @@
       "when": 1777653557052,
       "tag": "0001_flashy_white_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777915532919,
+      "tag": "0002_perfect_dormammu",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1777916816554,
+      "tag": "0003_friendly_red_ghost",
+      "breakpoints": true
     }
   ]
 }
