@@ -1,20 +1,27 @@
 import { Response, Request } from "express";
 
-import { BadRequestError, NotFoundError } from "../error.js";
+import { BadRequestError, NotFoundError, UnauthorizedError } from "../error.js";
 import { createChirp, getChirp, getChirps } from "../db/queries/chirps.js";
+import { getBearerToken, validateJWT } from "./auth.js";
+import { config } from "../config.js";
 
 export async function handlerCreateChirp(request: Request, response: Response)
 {
     type parameters = {
         body: string;
-        userId: string;
     }
+
+    const token = getBearerToken(request);
+    const userId = validateJWT(token, config.api.secret);
 
     const params: parameters = request.body;
 
     params.body = validateChirp(params.body);
 
-    const chirp = await createChirp(params);
+    const chirp = await createChirp({
+        body: params.body,
+        userId: userId,
+    });
 
     if (chirp === undefined)
         throw new Error("Could not add chirp to the database.");

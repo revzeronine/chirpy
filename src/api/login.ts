@@ -1,14 +1,16 @@
 import { Request, Response } from "express";
 import { getUserByEmail } from "../db/queries/users.js";
-import { BadRequestError, UnauthorizedError } from "../error.js";
-import { checkPasswordHash } from "./auth.js";
+import { UnauthorizedError } from "../error.js";
+import { checkPasswordHash, makeJWT } from "./auth.js";
 import { User } from "../db/schema.js";
+import { config } from "../config.js";
 
 export async function handlerLogin(request: Request, response: Response)
 {
     type parameters = {
         password: string;
         email: string;
+        expiresInSeconds?: number;
     }
 
     const params: parameters = request.body;
@@ -16,6 +18,13 @@ export async function handlerLogin(request: Request, response: Response)
     const user = await getUserByEmail(params.email);
     if (user === undefined)
         throw new UnauthorizedError("Incorrect email or password");
+
+    const userId: string = user.id!;
+    const expiresIn: number = params.expiresInSeconds && params.expiresInSeconds < 3600 
+                              ? params.expiresInSeconds 
+                              : 3600;
+
+    const token = makeJWT(userId, expiresIn, config.api.secret);
 
     const isVerified: boolean = await checkPasswordHash(params.password, user.hashedPassword!);
 
@@ -27,6 +36,7 @@ export async function handlerLogin(request: Request, response: Response)
         email: user.email,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-    } satisfies Omit<User, "hashedPassword">;
+        token: token,
+    };
     response.status(200).json(responseUser);
 }

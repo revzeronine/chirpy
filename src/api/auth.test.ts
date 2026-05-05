@@ -1,5 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { checkPasswordHash, hashPassword, makeJWT, validateJWT } from "./auth.js";
+import { Request } from "express";
+
+import { checkPasswordHash, getBearerToken, hashPassword, makeJWT, validateJWT } from "./auth.js";
 import { UnauthorizedError } from "../error.js";
 
 describe("Password Hashing", () => {
@@ -54,5 +56,23 @@ describe("JWT Functions", () => {
         expect(() => validateJWT(token, "wrongsecret")).toThrow(
             UnauthorizedError,
         );
+    });
+});
+
+describe("Request Parsing", () => {
+    it("should return just the token without the Bearer prefix", () => {
+        const request: Request = {
+            get: (header: string) =>
+                header === "Authorization" ? "Bearer abcdefg" : undefined,
+        } as Request;
+        expect(getBearerToken(request)).toBe("abcdefg");
+    });
+
+    it("should remove trailing whitespace from the token", () => {
+        const request: Request = {
+            get: (header: string) =>
+                header === "Authorization" ? "Bearer    aabbcc  " : undefined,
+        } as Request;
+        expect(getBearerToken(request)).toBe("aabbcc");
     });
 });

@@ -15,6 +15,7 @@ export function envOrThrow(key: string): string
 type APIConfig = {
     fileserverHits: number;
     platform: string;
+    secret: string;
 };
 
 type DBConfig = {
@@ -29,6 +30,7 @@ const migrationConfig: MigrationConfig = {
 const apiConfig: APIConfig = {
     fileserverHits: 0,
     platform: envOrThrow("PLATFORM"),
+    secret: envOrThrow("TOKEN_STRING"),
 }
 
 const dbConfig: DBConfig = {

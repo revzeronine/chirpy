@@ -46,3 +46,13 @@ export function validateJWT(tokenString: string, secret: string): string
 
     return decoded.sub;
 }
+
+export function getBearerToken(request: Request): string
+{
+    let auth = request.get("Authorization");
+
+    if (auth === undefined)
+        throw new BadRequestError("No authorization token provided");
+
+    return auth.replace("Bearer", "").trim();
+}
