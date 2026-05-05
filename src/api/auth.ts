@@ -2,6 +2,9 @@ import * as argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 
+import type { Response, Request } from "express";
+import { BadRequestError, UnauthorizedError } from "../error.js";
+
 type Payload = Pick<JwtPayload, "iss" | "sub" | "iat" | "exp">;
 
 export async function hashPassword(password: string): Promise<string>
@@ -30,14 +33,16 @@ export function makeJWT(userID: string, expiresIn: number, secret: string): stri
 
 export function validateJWT(tokenString: string, secret: string): string
 {
+    let decoded: Payload;
     try {
-        const decoded = jwt.verify(tokenString, secret);
-        if (decoded.sub === undefined)
-            throw new Error("Invalid token");
-
-        return decoded.sub.toString();
+        decoded = jwt.verify(tokenString, secret) as JwtPayload;
     }
     catch (err) {
-        throw new Error(`Could not validate token: ${err instanceof Error ? err.message : err}`);
+        throw new UnauthorizedError(`Invalid token`);
     }
+
+    if (decoded.sub === undefined)
+        throw new UnauthorizedError("No user id in token");
+
+    return decoded.sub;
 }

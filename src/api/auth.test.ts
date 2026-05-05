@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { checkPasswordHash, hashPassword, makeJWT, validateJWT } from "./auth.js";
+import { UnauthorizedError } from "../error.js";
 
 describe("Password Hashing", () => {
     const password1 = "correctPassword123!";
@@ -26,5 +27,32 @@ describe("Password Hashing", () => {
 
         const result2 = await checkPasswordHash(password2, hash1);
         expect(result2).toBe(false);
+    });
+});
+
+describe("JWT Functions", () => {
+    const secret = "some_secret";
+    const userId = "userid";
+    let token: string;
+
+    beforeAll(async () => {
+        token = makeJWT(userId, 3600, secret);
+    });
+
+    it("should validate and return the user ID from token", () => {
+        const result = validateJWT(token, secret);
+        expect(result).toBe(userId);
+    });
+
+    it("should throw an error for an invalid token string", () => {
+        expect(() => validateJWT("invalid.token.string", secret)).toThrow(
+            UnauthorizedError,
+        );
+    });
+
+    it("should throw an error for using the wrong secret", () => {
+        expect(() => validateJWT(token, "wrongsecret")).toThrow(
+            UnauthorizedError,
+        );
     });
 });
