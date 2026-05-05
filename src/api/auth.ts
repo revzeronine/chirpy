@@ -54,7 +54,7 @@ export function getBearerToken(request: Request): string
     let auth = request.get("Authorization");
 
     if (auth === undefined)
-        throw new BadRequestError("No authorization token provided");
+        throw new UnauthorizedError("No authorization token provided");
 
     return auth.replace("Bearer", "").trim();
 }

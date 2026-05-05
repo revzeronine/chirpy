@@ -11,7 +11,7 @@ import { middlewareError, middlewareLogResponses, middlewareMetricsInc } from ".
 import { handlerReadiness } from "./api/readiness.js";
 import { handlerMetrics } from "./api/metrics.js";
 import { handlerCreateChirp, handlerGetChirp, handlerGetChirps } from "./api/chirps.js";
-import { handlerUsers } from "./api/users.js";
+import { handlerUpdateUser, handlerUsers } from "./api/users.js";
 import { handlerReset } from "./api/reset.js";
 import { handlerLogin } from "./api/login.js";
 import { handlerRefresh } from "./api/refresh.js";
@@ -44,6 +44,11 @@ app.post("/api/chirps", (req, res, next) => {
 app.post("/api/users", (req, res, next) => {
     Promise.resolve(handlerUsers(req, res)).catch(next);
 });
+app.put("/api/users", (req, res, next) => {
+    Promise.resolve(handlerUpdateUser(req, res)).catch(next);
+});
+
+
 app.post("/api/login", (req, res, next) => {
     Promise.resolve(handlerLogin(req, res)).catch(next);
 });
