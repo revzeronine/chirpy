@@ -25,3 +25,8 @@ export async function getChirp(chirpId: string): Promise<Chirp | undefined>
                            .where(eq(chirps.id, chirpId));
     return result.at(0);
 }
+
+export async function deleteChirp(chirpId: string)
+{
+    await db.delete(chirps).where(eq(chirps.id, chirpId));
+}
