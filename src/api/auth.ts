@@ -1,9 +1,11 @@
 import * as argon2 from "argon2";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 
 import type { Response, Request } from "express";
 import { BadRequestError, UnauthorizedError } from "../error.js";
+import { createToken } from "../db/queries/refreshTokens.js";
 
 type Payload = Pick<JwtPayload, "iss" | "sub" | "iat" | "exp">;
 
@@ -55,4 +57,21 @@ export function getBearerToken(request: Request): string
         throw new BadRequestError("No authorization token provided");
 
     return auth.replace("Bearer", "").trim();
+}
+
+export async function makeRefreshToken(userId: string, expiresIn: number): Promise<string>
+{
+    const tokenString = crypto.randomBytes(32).toString("hex");
+    const now = Date.now();
+
+    const token = await createToken({
+        token: tokenString,
+        userId: userId,
+        expiresAt: new Date(Math.floor(now / 1000) + expiresIn),
+    });
+
+    if (token === undefined)
+        throw new Error("Could not create token");
+
+    return tokenString;
 }

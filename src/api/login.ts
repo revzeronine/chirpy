@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getUserByEmail } from "../db/queries/users.js";
 import { UnauthorizedError } from "../error.js";
-import { checkPasswordHash, makeJWT } from "./auth.js";
+import { checkPasswordHash, makeJWT, makeRefreshToken } from "./auth.js";
 import { User } from "../db/schema.js";
 import { config } from "../config.js";
 
@@ -10,7 +10,6 @@ export async function handlerLogin(request: Request, response: Response)
     type parameters = {
         password: string;
         email: string;
-        expiresInSeconds?: number;
     }
 
     const params: parameters = request.body;
@@ -20,11 +19,11 @@ export async function handlerLogin(request: Request, response: Response)
         throw new UnauthorizedError("Incorrect email or password");
 
     const userId: string = user.id!;
-    const expiresIn: number = params.expiresInSeconds && params.expiresInSeconds < 3600 
-                              ? params.expiresInSeconds 
-                              : 3600;
+    const accessExpiresIn: number = 3600;
+    const refreshExpiresIn: number = 3600 * 24 * 60;
 
-    const token = makeJWT(userId, expiresIn, config.api.secret);
+    const accessToken = makeJWT(userId, accessExpiresIn, config.api.secret);
+    const refreshToken = await makeRefreshToken(userId, refreshExpiresIn);
 
     const isVerified: boolean = await checkPasswordHash(params.password, user.hashedPassword!);
 
@@ -36,7 +35,8 @@ export async function handlerLogin(request: Request, response: Response)
         email: user.email,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-        token: token,
+        token: accessToken,
+        refreshToken: refreshToken,
     };
     response.status(200).json(responseUser);
 }

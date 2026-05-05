@@ -29,6 +29,20 @@
       "when": 1777916816554,
       "tag": "0003_friendly_red_ghost",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1778009771617,
+      "tag": "0004_right_stark_industries",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1778009930950,
+      "tag": "0005_noisy_prima",
+      "breakpoints": true
     }
   ]
 }
