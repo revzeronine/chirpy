@@ -37,12 +37,17 @@ export async function handlerGetChirps(request: Request, response: Response)
     if (typeof authorIdQuery === "string")
         authorId = authorIdQuery;
 
+    let sort: "asc" | "desc" = "asc";
+    const sortQuery = request.query.sort;
+    if (sortQuery === "asc" || sortQuery === "desc")
+        sort = sortQuery;
+
     let chirps: Chirp[];
 
     if (authorId !== "")
-        chirps = await getChirpsForUser(authorId);
+        chirps = await getChirpsForUser(authorId, sort);
     else
-        chirps = await getChirps();
+        chirps = await getChirps(sort);
     
     response.status(200).json(chirps);
 }
