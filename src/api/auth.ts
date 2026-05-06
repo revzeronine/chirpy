@@ -75,3 +75,13 @@ export async function makeRefreshToken(userId: string, expiresIn: number): Promi
 
     return tokenString;
 }
+
+export function getApiKey(request: Request)
+{
+    const auth = request.get("Authorization");
+
+    if (auth === undefined)
+        throw new UnauthorizedError("No authorization token provided");
+
+    return auth.replace("ApiKey", "").trim();
+}

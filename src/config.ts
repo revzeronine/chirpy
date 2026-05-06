@@ -16,6 +16,7 @@ type APIConfig = {
     fileserverHits: number;
     platform: string;
     secret: string;
+    polkaKey: string;
 };
 
 type DBConfig = {
@@ -31,6 +32,7 @@ const apiConfig: APIConfig = {
     fileserverHits: 0,
     platform: envOrThrow("PLATFORM"),
     secret: envOrThrow("TOKEN_STRING"),
+    polkaKey: envOrThrow("POLKA_KEY"),
 }
 
 const dbConfig: DBConfig = {

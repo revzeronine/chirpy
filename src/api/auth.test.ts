@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { Request } from "express";
 
-import { checkPasswordHash, getBearerToken, hashPassword, makeJWT, validateJWT } from "./auth.js";
+import { checkPasswordHash, getApiKey, getBearerToken, hashPassword, makeJWT, validateJWT } from "./auth.js";
 import { UnauthorizedError } from "../error.js";
 
 describe("Password Hashing", () => {
@@ -59,7 +59,7 @@ describe("JWT Functions", () => {
     });
 });
 
-describe("Request Parsing", () => {
+describe("Bearer Key Parsing", () => {
     it("should return just the token without the Bearer prefix", () => {
         const request: Request = {
             get: (header: string) =>
@@ -74,5 +74,23 @@ describe("Request Parsing", () => {
                 header === "Authorization" ? "Bearer    aabbcc  " : undefined,
         } as Request;
         expect(getBearerToken(request)).toBe("aabbcc");
+    });
+});
+
+describe("API Key Parsing", () => {
+    it("should return just the token without the ApiKey prefix", () => {
+        const request: Request = {
+            get: (header: string) =>
+                header === "Authorization" ? "ApiKey abcdefg" : undefined,
+        } as Request;
+        expect(getApiKey(request)).toBe("abcdefg");
+    });
+
+    it("should remove trailing whitespace from the token", () => {
+        const request: Request = {
+            get: (header: string) =>
+                header === "Authorization" ? "ApiKey    aabbcc  " : undefined,
+        } as Request;
+        expect(getApiKey(request)).toBe("aabbcc");
     });
 });

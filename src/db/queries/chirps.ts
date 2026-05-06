@@ -18,6 +18,15 @@ export async function getChirps(): Promise<Chirp[]>
     return result;
 }
 
+export async function getChirpsForUser(userId: string): Promise<Chirp[]>
+{
+    const result = await db.select()
+                           .from(chirps)
+                           .where(eq(chirps.userId, userId))
+                           .orderBy(asc(chirps.createdAt));
+    return result;
+}
+
 export async function getChirp(chirpId: string): Promise<Chirp | undefined>
 {
     const result = await db.select()
