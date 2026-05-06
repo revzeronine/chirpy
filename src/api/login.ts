@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { getUserByEmail } from "../db/queries/users.js";
 import { UnauthorizedError } from "../error.js";
 import { checkPasswordHash, makeJWT, makeRefreshToken } from "./auth.js";
-import { User } from "../db/schema.js";
 import { config } from "../config.js";
 
 export async function handlerLogin(request: Request, response: Response)
@@ -37,6 +36,7 @@ export async function handlerLogin(request: Request, response: Response)
         updatedAt: user.updatedAt,
         token: accessToken,
         refreshToken: refreshToken,
+        isChirpyRed: user.isChirpyRed,
     };
     response.status(200).json(responseUser);
 }

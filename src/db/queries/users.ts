@@ -25,6 +25,23 @@ export async function updateCredentials(userId: string,
     return result.at(0);
 }
 
+export async function setUserMembership(userId: string, isMember: boolean): Promise<void>
+{
+    await db.update(users)
+            .set({
+                isChirpyRed: isMember,
+            })
+            .where(eq(users.id, userId))
+}
+
+export async function getUserById(userId: string): Promise<User | undefined>
+{
+    const result = await db.select()
+                           .from(users)
+                           .where(eq(users.id, userId));
+    return result.at(0);
+}
+
 export async function getUserByEmail(email: string): Promise<User | undefined>
 {
     const result = await db.select()

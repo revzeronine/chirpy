@@ -27,6 +27,7 @@ export async function handlerUsers(request: Request, response: Response)
         email: user.email,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+        isChirpyRed: user.isChirpyRed,
     } satisfies Omit<User, "hashedPassword">;
     response.status(201).json(responseUser);
 }
@@ -60,6 +61,7 @@ export async function handlerUpdateUser(request: Request, response: Response)
         email: user.email,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+        isChirpyRed: user.isChirpyRed,
     } satisfies Omit<User, "hashedPassword">;
     response.status(200).json(responseUser);
 }

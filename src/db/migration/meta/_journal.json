@@ -43,6 +43,13 @@
       "when": 1778009930950,
       "tag": "0005_noisy_prima",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1778104943535,
+      "tag": "0006_thankful_molten_man",
+      "breakpoints": true
     }
   ]
 }
